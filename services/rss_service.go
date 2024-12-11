@@ -35,6 +35,7 @@ func FetchRSSFeeds(urls []string, days int) ([]models.News, error) {
 				Content:   item.Description,
 				Status:    "Added",
 				CreatedAt: publishedTime,
+				URL:       item.Link,
 			})
 		}
 	}

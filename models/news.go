@@ -8,4 +8,5 @@ type News struct {
 	Content   string    `json:"content" firestore:"content"`
 	Status    string    `json:"status" firestore:"status"`
 	CreatedAt time.Time `json:"created_at" firestore:"created_at"`
+	URL       string    `json:"url" firestore:"url"`
 }
