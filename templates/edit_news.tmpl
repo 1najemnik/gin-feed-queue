@@ -1,0 +1,10 @@
+{{ define "edit_news.tmpl" }}
+<form method="POST" action="/news/edit/{{ .News.ID }}" class="mb-4">
+    <div class="mb-3">
+        <label for="content" class="form-label">Content:</label>
+        <textarea class="form-control" name="content" id="content" rows="10">{{ .News.Content }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="/" class="btn btn-secondary">Back to News List</a>
+</form>
+{{ end }}
