@@ -25,15 +25,44 @@ func SaveNews(newsList []models.News) error {
 	ctx := context.Background()
 
 	for _, news := range newsList {
-		news.ID = GenerateUUID()
+		exists, err := isNewsExistsByURL(news.URL)
+		if err != nil {
+			log.Printf("Failed to check existence for URL %s: %v", news.URL, err)
+			continue
+		}
 
-		_, err := firestoreClient.Collection("news").Doc(news.ID).Set(ctx, news)
+		if exists {
+			log.Printf("News with URL %s already exists. Skipping.", news.URL)
+			continue
+		}
+
+		news.ID = GenerateUUID()
+		_, err = firestoreClient.Collection("news").Doc(news.ID).Set(ctx, news)
 		if err != nil {
 			log.Printf("Failed to save news: %v", err)
+			continue
 		}
+
+		log.Printf("News saved successfully: %s", news.URL)
 	}
 
 	return nil
+}
+
+func isNewsExistsByURL(url string) (bool, error) {
+	ctx := context.Background()
+	iter := firestoreClient.Collection("news").Where("url", "==", url).Limit(1).Documents(ctx)
+	defer iter.Stop()
+
+	doc, err := iter.Next()
+	if err == iterator.Done {
+		return false, nil
+	}
+	if err != nil {
+		return false, err
+	}
+
+	return doc.Exists(), nil
 }
 
 func GetAllNews(page, limit int) ([]models.News, error) {
