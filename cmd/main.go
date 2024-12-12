@@ -12,6 +12,7 @@ import (
 	"google.golang.org/api/option"
 
 	"gin-feed-queue/controllers"
+	"gin-feed-queue/middlewares"
 	"gin-feed-queue/services"
 )
 
@@ -23,7 +24,7 @@ func main() {
 	services.InitTelegramBot()
 
 	r := gin.Default()
-
+	r.Use(middlewares.ValidateAccessKey())
 	r.LoadHTMLGlob("templates/*")
 
 	r.GET("/", controllers.RenderIndexPage)
