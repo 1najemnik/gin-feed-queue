@@ -26,6 +26,7 @@ Gin Feed Queue is a web application for managing news from RSS feeds, with featu
     TELEGRAM_BOT_TOKEN=your-telegram-bot-token
     TELEGRAM_CHANNEL_ID=@your_channel_id
     RSS_FEEDS=https://example.com/rss,https://another-rss.com/feed
+    ACCESS_KEY=password
     PORT=8080
     ```
 3. Install dependencies:
@@ -40,7 +41,7 @@ Gin Feed Queue is a web application for managing news from RSS feeds, with featu
 ## API
 - **POST `/api/rss`**: Fetch news from RSS feeds for the last few days.
     ```bash
-    curl -X POST "http://localhost:8080/api/rss?days=2"
+    curl -X POST "http://localhost:8080/api/rss?access_key=password&days=2"
     ```
 
 ## Usage

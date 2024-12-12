@@ -1,5 +1,5 @@
 {{ define "edit_news.tmpl" }}
-<form method="POST" action="/news/edit/{{ .News.ID }}" class="mb-4">
+<form method="POST" action="/news/edit/{{ .News.ID }}?access_key={{ $.AccessKey }}" class="mb-4">
     <div class="mb-3">
         <label for="content" class="form-label">Content:</label>
         <textarea class="form-control" name="content" id="content" rows="10">{{ .News.Content }}</textarea>
@@ -8,15 +8,15 @@
     <div class="mb-3">
         <label for="original" class="form-label">Original News:</label>
         <div>
-                    <button type="button" class="btn btn-info mt-3" id="show-iframe-btn">Show Original Article in Frame</button>
-                           <a href="{{ .News.URL }}" target="_blank" class="btn btn-link">Read Original Article</a>
+            <button type="button" class="btn btn-info mt-3" id="show-iframe-btn">Show Original Article in Frame</button>
+            <a href="{{ .News.URL }}" target="_blank" class="btn btn-link">Read Original Article</a>
         </div>
         <div id="original-frame-container" style="display: none; height: 500px; overflow: auto; margin-top: 15px;">
             <iframe id="original-iframe" src="{{ .News.URL }}" width="100%" height="100%" frameborder="0"></iframe>
         </div>
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
-    <a href="/" class="btn btn-secondary">Back to News List</a>
+    <a href="/?access_key={{ $.AccessKey }}" class="btn btn-secondary">Back to News List</a>
 </form>
 
 <script>

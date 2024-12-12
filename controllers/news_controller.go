@@ -11,6 +11,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func getAccessKey() string {
+	return os.Getenv("ACCESS_KEY")
+}
+
 func RenderIndexPage(c *gin.Context) {
 	page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
 	if err != nil || page < 1 {
@@ -22,8 +26,9 @@ func RenderIndexPage(c *gin.Context) {
 	if err != nil {
 		log.Printf("Error fetching news: %v", err)
 		c.HTML(http.StatusInternalServerError, "template.tmpl", gin.H{
-			"Title": "News List - Error",
-			"Error": "Failed to fetch news",
+			"Title":     "News List - Error",
+			"Error":     "Failed to fetch news",
+			"AccessKey": getAccessKey(),
 		})
 		return
 	}
@@ -39,6 +44,7 @@ func RenderIndexPage(c *gin.Context) {
 		"PreviousPage":    page - 1,
 		"HasNextPage":     len(news) == limit,
 		"HasPreviousPage": page > 1,
+		"AccessKey":       getAccessKey(),
 	})
 }
 
@@ -47,8 +53,9 @@ func RenderEditNewsPage(c *gin.Context) {
 	news, err := services.GetNewsByID(id)
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "template.tmpl", gin.H{
-			"Title": "Edit News - Error",
-			"Error": "Failed to fetch news",
+			"Title":     "Edit News - Error",
+			"Error":     "Failed to fetch news",
+			"AccessKey": getAccessKey(),
 		})
 		return
 	}
@@ -57,6 +64,7 @@ func RenderEditNewsPage(c *gin.Context) {
 		"Title":           "Edit News",
 		"ContentTemplate": "edit_news.tmpl",
 		"News":            news,
+		"AccessKey":       getAccessKey(),
 	})
 }
 
@@ -70,7 +78,7 @@ func EditNews(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusSeeOther, "/")
+	c.Redirect(http.StatusSeeOther, "/?access_key="+getAccessKey())
 }
 
 func DeleteNews(c *gin.Context) {
@@ -83,7 +91,7 @@ func DeleteNews(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusSeeOther, "/")
+	c.Redirect(http.StatusSeeOther, "/?access_key="+getAccessKey())
 }
 
 func PublishToTelegram(c *gin.Context) {
@@ -117,5 +125,5 @@ func PublishToTelegram(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusSeeOther, "/")
+	c.Redirect(http.StatusSeeOther, "/?access_key="+getAccessKey())
 }

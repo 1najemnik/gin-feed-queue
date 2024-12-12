@@ -18,15 +18,15 @@
                     </span>
                 </td>
                 <td>
-                    <a href="/news/edit/{{ .ID }}" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="/news/edit/{{ .ID }}?access_key={{ $.AccessKey }}" class="btn btn-sm btn-warning">Edit</a>
                     {{ if eq .Status "Processed" }}
-                    <form action="/news/publish/{{ .ID }}" method="POST" style="display:inline;">
+                    <form action="/news/publish/{{ .ID }}?access_key={{ $.AccessKey }}" method="POST" style="display:inline;">
                         <button type="submit" class="btn btn-sm btn-primary">Publish</button>
                     </form>
                     {{ else }}
                     <button class="btn btn-sm btn-secondary" disabled>Publish</button>
                     {{ end }}
-                    <form action="/news/delete/{{ .ID }}" method="POST" style="display:inline;" onsubmit="return confirmDelete();">
+                    <form action="/news/delete/{{ .ID }}?access_key={{ $.AccessKey }}" method="POST" style="display:inline;" onsubmit="return confirmDelete();">
                         <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                     </form>
                 </td>
@@ -44,7 +44,7 @@
     <ul class="pagination">
         {{ if .HasPreviousPage }}
         <li class="page-item">
-            <a class="page-link" href="/?page={{ .PreviousPage }}" aria-label="Previous">
+            <a class="page-link" href="/?page={{ .PreviousPage }}&access_key={{ $.AccessKey }}" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
@@ -52,7 +52,7 @@
         <li class="page-item active"><a class="page-link" href="#">{{ .CurrentPage }}</a></li>
         {{ if .HasNextPage }}
         <li class="page-item">
-            <a class="page-link" href="/?page={{ .NextPage }}" aria-label="Next">
+            <a class="page-link" href="/?page={{ .NextPage }}&access_key={{ $.AccessKey }}" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
             </a>
         </li>
