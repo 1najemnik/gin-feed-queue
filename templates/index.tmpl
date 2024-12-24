@@ -13,18 +13,28 @@
             <tr>
                 <td>{{ .Title }}</td>
                 <td>
-                    <span class="badge bg-{{ if eq .Status "Processed" }}success{{ else if eq .Status "Published" }}primary{{ else }}secondary{{ end }}">
-                        {{ .Status }}
-                    </span>
+                    {{ if HasStatus .Status 2 }}
+                    <span class="badge bg-success">Processed</span>
+                    {{ end }}
+                    {{ if HasStatus .Status 4 }}
+                    <span class="badge bg-primary">Published to Telegram</span>
+                    {{ end }}
+                    {{ if HasStatus .Status 8 }}
+                    <span class="badge bg-info">Published to Facebook</span>
+                    {{ end }}
+                    {{ if not (or (HasStatus .Status 2) (HasStatus .Status 4) (HasStatus .Status 8)) }}
+                    <span class="badge bg-secondary">Added</span>
+                    {{ end }}
                 </td>
                 <td>
                     <a href="/news/edit/{{ .ID }}?access_key={{ $.AccessKey }}" class="btn btn-sm btn-warning">Edit</a>
-                    {{ if eq .Status "Processed" }}
+                    
+                    {{ if and (HasStatus .Status 2) (not (HasStatus .Status 4)) }}
                     <form action="/news/publish/{{ .ID }}?access_key={{ $.AccessKey }}" method="POST" style="display:inline;">
-                        <button type="submit" class="btn btn-sm btn-primary">Publish</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Publish to Telegram</button>
                     </form>
                     {{ else }}
-                    <button class="btn btn-sm btn-secondary" disabled>Publish</button>
+                    <button class="btn btn-sm btn-secondary" disabled>Publish to Telegram</button>
                     {{ end }}
                     <form action="/news/delete/{{ .ID }}?access_key={{ $.AccessKey }}" method="POST" style="display:inline;" onsubmit="return confirmDelete();">
                         <button type="submit" class="btn btn-sm btn-danger">Delete</button>

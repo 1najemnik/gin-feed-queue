@@ -2,9 +2,8 @@ package services
 
 import (
 	"context"
-	"log"
-
 	"gin-feed-queue/models"
+	"log"
 
 	"cloud.google.com/go/firestore"
 	"github.com/google/uuid"
@@ -125,15 +124,39 @@ func UpdateNewsContent(id, content string) error {
 	ctx := context.Background()
 	_, err := firestoreClient.Collection("news").Doc(id).Update(ctx, []firestore.Update{
 		{Path: "content", Value: content},
-		{Path: "status", Value: "Processed"},
+		{Path: "status", Value: models.StatusProcessed},
 	})
 	return err
 }
 
-func UpdateNewsStatus(id, status string) error {
+func UpdateNewsStatus(id string, status int) error {
 	ctx := context.Background()
 	_, err := firestoreClient.Collection("news").Doc(id).Update(ctx, []firestore.Update{
 		{Path: "status", Value: status},
 	})
 	return err
+}
+
+func AddNewsStatus(id string, status int) error {
+	ctx := context.Background()
+
+	doc, err := firestoreClient.Collection("news").Doc(id).Get(ctx)
+	if err != nil {
+		return err
+	}
+
+	var news models.News
+	doc.DataTo(&news)
+
+	newStatus := news.Status | status
+
+	_, err = firestoreClient.Collection("news").Doc(id).Update(ctx, []firestore.Update{
+		{Path: "status", Value: newStatus},
+	})
+
+	return err
+}
+
+func HasStatus(status int, bit int) bool {
+	return (status & bit) != 0
 }

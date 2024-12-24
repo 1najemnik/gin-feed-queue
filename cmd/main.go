@@ -24,6 +24,11 @@ func main() {
 	services.InitTelegramBot()
 
 	r := gin.Default()
+
+	r.SetFuncMap(map[string]interface{}{
+		"HasStatus":        controllers.HasStatus,
+		"GetStatusStrings": controllers.GetStatusStrings,
+	})
 	r.Use(middlewares.ValidateAccessKey())
 	r.LoadHTMLGlob("templates/*")
 

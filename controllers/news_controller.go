@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 
+	"gin-feed-queue/models"
 	"gin-feed-queue/services"
 
 	"github.com/gin-gonic/gin"
@@ -45,6 +46,7 @@ func RenderIndexPage(c *gin.Context) {
 		"HasNextPage":     len(news) == limit,
 		"HasPreviousPage": page > 1,
 		"AccessKey":       getAccessKey(),
+		"HasStatus":       HasStatus,
 	})
 }
 
@@ -103,7 +105,7 @@ func PublishToTelegram(c *gin.Context) {
 		return
 	}
 
-	if news.Status != "Processed" {
+	if !services.HasStatus(news.Status, models.StatusProcessed) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "News must be processed before publishing"})
 		return
 	}
@@ -119,11 +121,31 @@ func PublishToTelegram(c *gin.Context) {
 		return
 	}
 
-	err = services.UpdateNewsStatus(id, "Published")
+	err = services.AddNewsStatus(id, models.StatusPublishedToTelegram)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update news status"})
 		return
 	}
 
 	c.Redirect(http.StatusSeeOther, "/?access_key="+getAccessKey())
+}
+
+func HasStatus(status, bit int) bool {
+	return (status & bit) != 0
+}
+
+func GetStatusStrings(status int) []string {
+	var statuses []string
+
+	if status&models.StatusProcessed != 0 {
+		statuses = append(statuses, "Processed")
+	}
+	if status&models.StatusPublishedToTelegram != 0 {
+		statuses = append(statuses, "Published to Telegram")
+	}
+	if status&models.StatusPublishedToFacebook != 0 {
+		statuses = append(statuses, "Published to Facebook")
+	}
+
+	return statuses
 }
