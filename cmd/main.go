@@ -24,14 +24,17 @@ func main() {
 	services.InitTelegramBot()
 
 	r := gin.Default()
+	r.Static("/static", "./static")
+	r.GET("/favicon.ico", func(c *gin.Context) {
+		c.File("./static/favicon.ico")
+	})
 
+	r.Use(middlewares.ValidateAccessKey())
 	r.SetFuncMap(map[string]interface{}{
 		"HasStatus":        controllers.HasStatus,
 		"GetStatusStrings": controllers.GetStatusStrings,
 	})
-	r.Use(middlewares.ValidateAccessKey())
 	r.LoadHTMLGlob("templates/*")
-
 	r.GET("/", controllers.RenderIndexPage)
 	r.GET("/news/edit/:id", controllers.RenderEditNewsPage)
 	r.POST("/news/edit/:id", controllers.EditNews)
