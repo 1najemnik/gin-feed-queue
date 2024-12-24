@@ -4,7 +4,7 @@ Gin Feed Queue is a web application for managing news from RSS feeds, with featu
 
 ## Features
 - Fetch news from specified RSS feeds.
-- Display a list of news with statuses: `New`, `Processed`, `Published`.
+- Display a list of news with bitwise statuses, allowing multiple statuses to be combined (e.g., `Processed` and `Published`).
 - Edit news content.
 - Publish news to Telegram.
 
@@ -49,5 +49,25 @@ Gin Feed Queue is a web application for managing news from RSS feeds, with featu
 - **Edit News**: Modify the content of news and update its status to `Processed`.
 - **Publish to Telegram**: Available for news with the `Processed` status.
 
+## Contributing
+
+We welcome contributions! If you would like to contribute to this project, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and commit them.
+4. Push your changes to your forked repository.
+5. Open a pull request with a clear description of your changes.
+
+Before submitting, ensure that your code adheres to the project's coding standards and passes all tests.
+
 ## License
-MIT
+
+This project is licensed under the **MIT License**.
+
+## Author
+
+This project was created and maintained by:
+
+**[Ilya Gordon](https://github.com/1najemnik)**
+Feel free to reach out at [ilyagdn@gmail.com](mailto:ilyagdn@gmail.com).
