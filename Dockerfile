@@ -16,6 +16,7 @@ COPY --from=builder /app/main .
 RUN mkdir -p /app/config
 COPY config/serviceAccountKey.json /root/config/serviceAccountKey.json
 COPY templates /root/templates
+COPY static /root/static
 
 EXPOSE 8080
 
